@@ -1,0 +1,76 @@
+<html>
+    <head>
+        <script type='text/javascript' src='http://code.jquery.com/jquery-3.1.1.min.js'></script>
+
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/mithril/0.2.5/mithril.min.js"></script>
+        <link href="http://www.opentip.org/js/build/build.css?v=2"  media="all" rel="stylesheet" type="text/css">
+        <link href="https://raw.github.com/enyo/opentip/master/css/opentip.css"  media="all" rel="stylesheet" type="text/css">
+        <script type="text/javascript" src="opentip.js"></script>
+        <style>
+            .ot-hidden{
+                display: none;
+            }
+        </style>
+        <script type="text/javascript" src="adapter-jquery.js"></script>
+    </head>
+    <body>
+        <div id="example"></div>
+        <script>
+            var Demo = {
+                //controller
+                controller: function() {
+                    return [
+                        {
+                            title: 'Google',
+                            url: 'google.com',
+                        },
+                        {
+                            title: 'Microsoft',
+                            url: '',
+                        },
+                        {
+                            title: 'Apple',
+                            url: 'apple.com',
+                        },
+                    ];
+                },
+
+                //view
+                view: function(pages) {
+                    return m("ul", [
+                        pages.map(function(page, i) {
+                            return m('li', {style: {overflow: 'hidden'}},
+                                (function(link){
+                                    if (! page.url) {
+                                        return m('span', { style: { float: 'left', background: 'green', border: '1px solid red' } }, m('span', link.attrs, link.children));
+                                    }
+                                    return link;
+                                }(m("a",
+                                    {
+                                        config: function(element, alreadyInit){
+                                            if( ! alreadyInit && page.url ){
+                                                $(element).opentip(page.url, {hideDelay: 1, fixed: true})
+                                            }
+                                        },
+                                        style: {display: 'inline-block', margin: '5px', background: 'yellow'} ,
+                                        href: page.url
+                                    }, 
+                                    page.title)))
+                            );
+                        }),
+                        m('li',
+                            m("button", {
+                                onclick: function() {
+                                    pages.push(pages.shift());
+                                }
+                            }, "Rotate links")
+                        )
+                    ]);
+                }
+            };
+
+            //initialize
+            m.mount(document.getElementById("example"), Demo);
+        </script>
+    </body>
+</html>
